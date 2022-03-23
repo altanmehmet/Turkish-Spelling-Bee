@@ -6,8 +6,9 @@
           <div v-on:click="delete_last_letter(this.value)" class="hive-action hive-action__delete sb-touch-button">Delete</div>
           <div v-on:click="refresh()" class="hive-action hive-action__shuffle sb-touch-button"></div></div>
       <div class="row" >
-        
+        <span id="category-text"><b>Puan : {{this.puan}}</b></span>
       <span id="category-text"><b>Bulunan Kelimeler</b></span>
+      
       <!-- <div class="line"></div> -->
       <div class="content-2">
         <li class="list" v-for="(item) in scores" :key="item">
@@ -33,7 +34,7 @@
     
   </ui-textfield>
   <ui-textfield-helper id="pw-validation-msg" class="userInputt" visible validMsg>
-  Kelime en az 4, en fazla 7 karakterden oluşabilir.
+  Kelime en az 3, en fazla 7 karakterden oluşabilir.
   </ui-textfield-helper>
   
 </section>
@@ -100,6 +101,7 @@ export default {
         isValidMsg: false
       },
         scores:[],
+        puan:0,
         firstCenter:"",
         secondOuter:"",
         thirdOuter:"",
@@ -108,13 +110,16 @@ export default {
         sixthOuter:"",
         seventhOuter:"",
         letterCache : [],
-        letters : ['B', 'C','Ç', 'D',  'F', 'G','Ğ','H', 'J', 'K', 'L', 'M', 'N',
-          'P','R', 'S','Ş', 'T', 'V','Y', 'Z'],
-        vowels : ['A','E','I','İ','O','Ö','U','Ü'],
+        arraySilent:[],
+        arrayVowels:[],
+        letters : ['b', 'c','ç', 'd',  'f', 'g','ğ','h', 'j', 'k', 'l', 'm', 'n',
+          'p','r', 's','ş', 't', 'v','y', 'z'],
+        vowels : ['a','e','ı','i','o','ö','u','ü'],
     }
   },
   methods: {
     letterCacheCheck(){
+      console.log(this.letterCache)
       let flag = 0
       console.log(this.value[0])
       
@@ -144,6 +149,7 @@ export default {
       console.log(this.value)
       if(kelime && this.letterCacheCheck()){
         this.$toast("Doğru" + " " + this.value.length + " " + "puan kazandınız!")
+        this.puan += this.value.length
         this.scores.push(this.value)
         this.value = ""
         
@@ -159,57 +165,44 @@ export default {
        
       console.log(this.letterCache)
      },
-     randomLetterFirst(){
-       let i = Math.floor(Math.random() * 21);
-       this.firstCenter = this.letters[i]
-       this.letterCache.push(this.firstCenter) 
-     } ,
-     randomLetterSecond(){
-       let i = Math.floor(Math.random() * 21);
-       this.secondOuter = this.letters[i]
-       this.letterCache.push(this.secondOuter)  
-     } ,
-     randomLetterThird(){
-       let i = Math.floor(Math.random() * 8);
-       this.thirdOuter = this.vowels[i]
-       this.letterCache.push(this.thirdOuter)  
-     } ,
-     randomLetterFourth(){
-       let i = Math.floor(Math.random() * 21);
-       this.fourthOuter = this.letters[i]
-       this.letterCache.push(this.fourthOuter);  
-     } ,
-     randomLetterFifth(){
-       let i = Math.floor(Math.random() * 21);
-       this.fifthOuter = this.letters[i]
-       this.letterCache.push(this.fifthOuter);  
-     } ,
-     randomLetterSixth(){
-       let i = Math.floor(Math.random() * 8);
-       this.sixthOuter = this.vowels[i]
-       this.letterCache.push(this.sixthOuter);  
-     } ,
-     randomLetterSeventh(){
-       let i = Math.floor(Math.random() * 21);
-      this.seventhOuter = this.letters[i]
-      this.letterCache.push(this.seventhOuter);  
-     } ,
+     randomLetters(){
+    while(this.arraySilent.length < 6){
+      var r = Math.floor(Math.random() * 21);
+      if(this.arraySilent.indexOf(r) === -1) this.arraySilent.push(r);
+      }
+      this.secondOuter = this.letters[this.arraySilent[0]]
+      this.fourthOuter = this.letters[this.arraySilent[1]]
+      this.fifthOuter = this.letters[this.arraySilent[3]]
+      this.sixthOuter = this.letters[this.arraySilent[4]]
+      this.seventhOuter = this.letters[this.arraySilent[5]]
+      for (let i = 0; i < this.arraySilent.length; i++) {
+        this.letterCache.push(this.letters[this.arraySilent[i]])
+      }
+     },
+     randomLettersVowels(){
+    while(this.arrayVowels.length < 2){
+      var r = Math.floor(Math.random() * 8);
+      if(this.arrayVowels.indexOf(r) === -1) this.arrayVowels.push(r);
+      }
+      this.firstCenter = this.vowels[this.arrayVowels[0]]
+      this.thirdOuter = this.vowels[this.arrayVowels[1]]
+      this.letterCache.push(this.vowels[this.arrayVowels[0]])
+      this.letterCache.push(this.vowels[this.arrayVowels[1]])
+
+     },
+    
   },
   mounted(){
+        this.randomLetters();
+        this.randomLettersVowels();
       
-       this.randomLetterFirst()
-       this.randomLetterSecond()
-       this.randomLetterThird()
-       this.randomLetterFourth()
-       this.randomLetterFifth()
-       this.randomLetterSixth()
-       this.randomLetterSeventh()
        
   },
   
 }
 </script>
-<style scoped>
+<style scoped >
+@charset "utf-8";
 .split {
   height: 100%;
   width: 50%;
@@ -436,7 +429,7 @@ export default {
     font-weight: 700;
     font-size: 1.875em;
     text-anchor: middle;
-    text-transform: uppercase;
+    /* text-transform: capitalize; */
     pointer-events: none;
 }
 </style>
