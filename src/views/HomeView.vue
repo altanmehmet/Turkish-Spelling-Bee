@@ -27,8 +27,8 @@ export default {
   methods : {
     openModal(){
       this.$swal.fire({
-  title: 'Create words using letters from the hive.',
-  text: "Words must contain at least 4 letters.Words must include the center letter.Our word list does not include words that are obscure, hyphenated, or proper nouns.No cussing either, sorry.Letters can be used more than once.",
+  title: 'Kovandaki harfleri kullanarak kelimeler oluştur.',
+  text: "Kelimeler en az 3 harf içermeli.Kelimeler birden fazla kez kullanılabilir.",
 })
     }
   }
